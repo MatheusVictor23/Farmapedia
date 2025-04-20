@@ -1,4 +1,5 @@
 import { DataTypes, Model } from "sequelize";
+import Medicamento from "./Medicamento";
 
 
 class Fabricante extends Model{
@@ -30,6 +31,12 @@ class Fabricante extends Model{
             timestamps:true
         }
     );
+
+        Fabricante.hasMany(Medicamento,{
+            onDelete:'RESTRICT',
+            onUpdate: 'CASCADE'
+        });
+
     }
 }
 

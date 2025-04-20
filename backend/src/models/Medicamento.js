@@ -35,7 +35,7 @@ class Medicamento extends Model{
         );
 
         Medicamento.belongsTo(Fabricante,{
-            foreignKey: fabricante_id,
+            foreignKey: "fabricante_id",
             as: "fabricante"
         })
     }
