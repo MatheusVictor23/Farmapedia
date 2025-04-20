@@ -50,7 +50,7 @@ export const cadastrarFabricante = async(req,res) => {
     try{
         const novoFabricante = await Fabricante.create({
             nome: nome,
-            document_registro: documento,
+            documento_registro: documento,
             pais: pais
         });
 
@@ -63,7 +63,7 @@ export const cadastrarFabricante = async(req,res) => {
         return res.status(201).json(response);
 
     }catch(error){
-        return res.status(400).json({error:"Erro ao criar fabricante!"});
+        return res.status(400).json({error:"Erro ao criar fabricante!"+error.message});
     }
 }
 

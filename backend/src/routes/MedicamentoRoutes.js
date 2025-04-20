@@ -1,5 +1,13 @@
 import { Router } from "express";
 
+import {
+    listarMedicamentos,
+    buscarMedicamento,
+    cadastrarMedicamento,
+    atualizarMedicamento,
+    deletarMedicamento
+} from "../repositories/Medicamento.js";
+
 
 const router = new Router();
 

@@ -79,13 +79,13 @@ export const cadastrarMedicamento = async(req,res) => {
             principio: novoMedicamento.principio_ativo,
             registro: novoMedicamento.registro_anvisa,
             dosagem: novoMedicamento.dosagem,
-            fabricante: novoMedicamento.fabricante.nome
+            fabricante: fabricanteEncontrado.nome
         }
 
         return res.status(200).json(response);
 
     }catch(error){
-        return res.status(200).json({error:"Erro ao criar Medicamento: "+error.message});
+        return res.status(400).json({error:"Erro ao criar Medicamento: "+error.message});
     }
 }
 

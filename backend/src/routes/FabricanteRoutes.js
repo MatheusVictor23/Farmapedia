@@ -1,4 +1,12 @@
 import {Router} from "express";
+import {
+    listarFabricantes,
+    buscarFabricante,
+    cadastrarFabricante,
+    atualizarFabricante,
+    deletarFabricante
+
+} from "../repositories/Fabricante.js"
 
 const router = new Router();
 

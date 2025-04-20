@@ -1,5 +1,5 @@
-import { DataTypes, Model } from "sequelize";
-import Medicamento from "./Medicamento";
+import { DataTypes, Model } from 'sequelize';
+import Medicamento from "./Medicamento.js";
 
 
 class Fabricante extends Model{
@@ -30,14 +30,16 @@ class Fabricante extends Model{
             tableName:"fabricantes",
             timestamps:true
         }
-    );
+    )}
 
-        Fabricante.hasMany(Medicamento,{
-            onDelete:'RESTRICT',
-            onUpdate: 'CASCADE'
+    static associate(models) {
+        Fabricante.hasMany(models.Medicamento, {
+          foreignKey: 'fabricante_id',
+          as: 'medicamentos',
+          onDelete: 'RESTRICT',
+          onUpdate: 'CASCADE'
         });
-
-    }
+      }
 }
 
 export default Fabricante;

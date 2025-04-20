@@ -16,4 +16,4 @@ sequelize
 .then(() => {console.log("Banco de dados sincronizado!")})
 .catch((error) => {console.log("Erro ao sincronizar dados:" + error)});
 
-
+export default app;

@@ -1,28 +1,28 @@
-import {Datatypes, Model} from "sequelize";
+import { DataTypes, Model } from 'sequelize';
 
 class Medicamento extends Model{
     static initModel(sequelize){
         Medicamento.init({
             id:{
-                type: Datatypes.INTERGER,
+                type: DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement:true
             },
             nome_comercial:{
-                type: Datatypes.STRING,
+                type: DataTypes.STRING,
                 allowNull: false
             },
             principio_ativo:{
-                type:Datatypes.STRING,
+                type:DataTypes.STRING,
                 allowNull:false
             },
             registro_anvisa:{
-                type:Datatypes.STRING,
+                type:DataTypes.STRING,
                 allowNull:false,
                 unique:true
             },
             dosagem:{
-                type: Datatypes.STRING,
+                type: DataTypes.STRING,
                 allowNull:false
             },
            },
@@ -32,13 +32,14 @@ class Medicamento extends Model{
             tableName: "medicamentos",
             timestamps:true
            }
-        );
+        )}
 
-        Medicamento.belongsTo(Fabricante,{
-            foreignKey: "fabricante_id",
-            as: "fabricante"
-        })
-    }
+    static associate(models) {
+        Medicamento.belongsTo(models.Fabricante, {
+          foreignKey: 'fabricante_id',
+          as: 'fabricante'
+        });
+      }
 }
 
 
