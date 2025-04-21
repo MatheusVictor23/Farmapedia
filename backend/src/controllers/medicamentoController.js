@@ -1,36 +1,28 @@
 import MedicamentoService from "../services/medicamentoService.js";
 
 export default class MedicamentoController{
-    static async listarMedicamentos(req,res){
+    static async listarMedicamentos(req, res, next){
         try{
             const medicamentos = await MedicamentoService.listarMedicamentos();
 
-            if(medicamentos.sucesso == false){
-                return res.status(400).json({error:"Error controller: "+medicamentos.message+ ", "})
-            }
-
-            return res.status(200).json(medicamentos.dados);
-        }catch(error){
-            return res.status(200).json({error:"Error Controller: "+error.message});
+            return res.status(200).json(medicamentos);
+        }catch (erro) {
+            next(erro); 
         }
     }
-    static async buscarMedicamento(req,res){
+    static async buscarMedicamento(req, res, next){
 
         const id = req.params.id;
         try{
             const medicamento = await MedicamentoService.buscarMedicamento(id);
 
-            if(medicamento.sucesso == false){
-                return res.status(400).json({error: "Error controller: "+medicamento.message + ", "})
-            }
-
-            return res.status(200).json(medicamento.dados)
-        }catch(error){
-            return res.status(200).json({error:"Error Controller: "+error.message});
+            return res.status(200).json(medicamento)
+        }catch (erro) {
+            next(erro); 
         }
     }
 
-    static async cadastrarMedicamento(req,res){
+    static async cadastrarMedicamento(req,res,next){
 
         const {nome,principio,registro,dosagem,fabricante} = req.body;
 
@@ -46,18 +38,14 @@ export default class MedicamentoController{
 
             const novoMedicamento = await MedicamentoService.cadastrarMedicamento(medicamento);
 
-            if(novoMedicamento.sucesso == false){
-                return res.status(400).json({error: "Error controller: "+novoMedicamento.message})
-            }
+            return res.status(200).json(novoMedicamento)
 
-            return res.status(200).json(novoMedicamento.dados)
-
-        }catch(error){
-            return res.status(200).json({error:"Error Controller: " + error.message + ", "});
+        }catch (erro) {
+            next(erro); 
         }
     }
 
-    static async atualizarMedicamento(req,res){
+    static async atualizarMedicamento(req,res,next){
         const {nome,principio,registro,dosagem,fabricante} = req.body;
         const id = req.params.id;
 
@@ -72,30 +60,22 @@ export default class MedicamentoController{
         try{
             const medicamentoAtualizado = await MedicamentoService.atualizarMedicamento(id,medicamento);
 
-            if(medicamentoAtualizado.sucesso == false){
-                return res.status(400).json({error: "Error controller: "+medicamentoAtualizado.message  + ", "})
-            }
-
-            return res.status(200).json(medicamentoAtualizado.dados)
-        }catch(error){
-            return res.status(200).json({error:"Error Controller: "+error.message});
+            return res.status(200).json(medicamentoAtualizado)
+        }catch (erro) {
+            next(erro); 
         }
     }
 
-    static async deletarMedicamento(req,res){
+    static async deletarMedicamento(req,res,next){
 
         const id = req.params.id;
         try{
             const medicamentoDeletado = await MedicamentoService.deletarMedicamento(id);
 
-            if(medicamentoDeletado.sucesso == false){
-                return res.status(400).send(medicamentoDeletado.message);
-            }
-
             return res.status(200).send(medicamentoDeletado.message);
 
-        }catch(error){
-            return res.status(200).json({error:"Error Controller: "+error.message});
+        }catch (erro) {
+            next(erro); 
         }
     }
 }

@@ -5,21 +5,18 @@ export default class MedicamentoService {
     try {
       const medicamentos = await MedicamentoRepository.findAll();
 
-      if (!medicamentos || medicamentos.length === 0) {
-        return { sucesso: false, mensagem: "Não há medicamentos cadastrados!" };
-      }
-
       const response = medicamentos.map((medicamento) => ({
+        id: medicamento.id,
         nome: medicamento.nome_comercial,
         principio: medicamento.principio_ativo,
         registro: medicamento.registro_anvisa,
         dosagem: medicamento.dosagem,
-        fabricante: medicamento.fabricante.nome,
+        fabricante: medicamento.fabricante.nome
       }));
 
-      return { sucesso: true, dados: response };
+      return response; 
     } catch (error) {
-      return { sucesso: false, mensagem: "Error Service: " + error.message };
+      throw new Error("Erro ao listar medicamentos: " + error.message);
     }
   }
 
@@ -28,20 +25,21 @@ export default class MedicamentoService {
       const medicamento = await MedicamentoRepository.findById(id);
 
       if (!medicamento) {
-        return { sucesso: false, mensagem: "Medicamento não encontrado!" };
+        throw new Error("Medicamento não encontrado!");
       }
 
       const response = {
+        id:medicamento.id,
         nome: medicamento.nome_comercial,
         principio: medicamento.principio_ativo,
         registro: medicamento.registro_anvisa,
         dosagem: medicamento.dosagem,
-        fabricante: medicamento.fabricante.nome,
+        fabricante: medicamento.fabricante.nome
       };
 
-      return { sucesso: true, dados: response };
+      return response;
     } catch (error) {
-      return { sucesso: false, mensagem: "Service error: " + error.message };
+      throw new Error("Erro ao buscar medicamento: " + error.message);
     }
   }
 
@@ -50,16 +48,18 @@ export default class MedicamentoService {
       const novoMedicamento = await MedicamentoRepository.create(medicamento);
 
       const response = {
+        id:novoMedicamento.id,
         nome: novoMedicamento.nome_comercial,
         principio: novoMedicamento.principio_ativo,
         registro: novoMedicamento.registro_anvisa,
         dosagem: novoMedicamento.dosagem,
-        fabricante: novoMedicamento.fabricante.nome,
+        fabricante: novoMedicamento.fabricante.nome
       };
 
-      return { sucesso: true, dados: response };
+      return response;
+
     } catch (error) {
-      return { sucesso: false, mensagem: "Não foi possível cadastrar o medicamento!" };
+      throw new Error("Erro ao cadastrar medicamento: " + error.message);
     }
   }
 
@@ -68,25 +68,27 @@ export default class MedicamentoService {
       const medicamentoAtualizado = await MedicamentoRepository.update(id, medicamento);
 
       const response = {
+        id:medicamentoAtualizado.id,
         nome: medicamentoAtualizado.nome_comercial,
         principio: medicamentoAtualizado.principio_ativo,
         registro: medicamentoAtualizado.registro_anvisa,
         dosagem: medicamentoAtualizado.dosagem,
-        fabricante: medicamentoAtualizado.fabricante.nome,
+        fabricante: medicamentoAtualizado.fabricante.nome
       };
 
-      return { sucesso: true, dados: response };
+      return response;
+
     } catch (error) {
-      return { sucesso: false, mensagem: "Não foi possível atualizar o medicamento!" };
+      throw new Error("Erro ao atualizar medicamento: " + error.message);
     }
   }
 
   static async deletarMedicamento(id) {
     try {
-      await MedicamentoRepository.delete(id);
-      return { sucesso: true, mensagem: "Medicamento deletado!" };
+      const resposta = await MedicamentoRepository.delete(id);
+      return resposta;
     } catch (error) {
-      return { sucesso: false, mensagem: "Não foi possível deletar o medicamento!" };
+      throw new Error("Erro ao deletar medicamento: " + error.message);
     }
   }
 }
