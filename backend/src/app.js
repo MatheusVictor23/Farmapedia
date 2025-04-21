@@ -1,15 +1,12 @@
 import express from "express";
 import sequelize from "./config/database.js";
-import FabricanteRoutes from "./routes/FabricanteRoutes.js";
-import MedicamentoRoutes from "./routes/MedicamentoRoutes.js"
+import routes from "./routes/indexRoute.js";
 
 const app = express();
 
 app.use(express.json());
 
-app.use("/api/fabricantes", FabricanteRoutes);
-app.use("/api/medicamentos", MedicamentoRoutes);
-
+app.use("/api/", routes);
 
 sequelize
 .sync()
