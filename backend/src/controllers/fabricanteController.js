@@ -8,97 +8,36 @@ import {
 
 
 export default class FabricanteController {
-    static async listarFabricantes(req,res){
-        try{
-            const fabricantes = await listarFabricantes();
-
-            if(!fabricantes.sucesso){
-                return res.status(404).json({ error: fabricantes.mensagem });
-            }
-
-            return res.status(200).json(fabricantes.dados);
-
-        }catch(error){
-            return res.status(400).json({error:"Erro ao listar fabricantes: "+error.message})
-        }
+    static async listarFabricantes(req, res, next) {
+        const fabricantes = await listarFabricantes();
+        return res.status(200).json(fabricantes);
     }
 
-    static async buscarFabricante(req,res){
-
-        const id = req.params.id
-        try{
-
-            const fabricante = await buscarFabricante(id);
-
-            if(!fabricante.sucesso){
-                return res.status(404).json({error: fabricante.mensagem})
-            }
-
-            return res.status(200).json(fabricante.dados);
-
-        }catch(error){
-            res.status(400).json({error:"Erro ao listar fabricante: "+error.message});
-        }
-    }
-
-    static async cadastrarFabricante(req,res){
-
-        const {nome,documento,pais} = req.body;
-
-        try{
-            const fabricante = {
-                nome:nome,
-                documento:documento,
-                pais:pais
-            }
-
-            const novoFabricante = await cadastrarFabricante(fabricante);
-
-            return res.status(200).json(novoFabricante.dados);
-
-        }catch(error){
-            res.status(400).json({error:"Erro ao listar fabricante: "+error.message});
-        }
-    }
-
-    static async atualizarFabricante(req,res){
+    static async buscarFabricante(req, res, next) {
         const id = req.params.id;
-        const {nome,documento,pais} = req.body;
+        const fabricante = await buscarFabricante(id);
+        return res.status(200).json(fabricante);
+    }
+
+    static async cadastrarFabricante(req, res, next) {
+        const { nome, documento, pais } = req.body;
+        const fabricante = { nome, documento, pais };
         
-        try{
-            const fabricante = {
-                nome:nome,
-                documento:documento,
-                pais:pais
-            }
-
-            const fabricanteAtualizado = await atualizarFabricante(id,fabricante);
-
-            if(!fabricanteAtualizado.sucesso){
-                return res.status(200).json(fabricanteAtualizado.mensagem);
-            }
-
-            return res.status(200).json(fabricanteAtualizado.dados);
-
-        }catch(error){
-            res.status(400).json({error:"Erro ao listar fabricante: "+error.message});
-        }
+        const novoFabricante = await cadastrarFabricante(fabricante);
+        return res.status(200).json(novoFabricante);
     }
 
-    static async deletarFabricante(req,res){
+    static async atualizarFabricante(req, res, next) {
         const id = req.params.id;
+        const { nome, documento, pais } = req.body;
+        const fabricante = { nome, documento, pais };
+        const fabricanteAtualizado = await atualizarFabricante(id, fabricante);
+        return res.status(200).json(fabricanteAtualizado);
+    }
 
-        try{
-            const fabricanteDeletado = await deletarFabricante(id);
-
-            if(!fabricanteDeletado.sucesso){
-                return res.status(200).json(fabricanteDeletado.mensagem);
-            }
-
-            return res.status(200).json(fabricanteDeletado.mensagem);
-
-        }catch(error){
-            res.status(400).json({error:"Erro ao listar fabricante: "+error.message});
-        }
+    static async deletarFabricante(req, res, next) {
+        const id = req.params.id;
+        const fabricanteDeletado = await deletarFabricante(id);
+        return res.status(200).json(fabricanteDeletado);
     }
 }

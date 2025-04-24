@@ -1,83 +1,65 @@
 import fabricanteRepository from "../repositories/fabricanteRepository.js";
-
+import AppError from "../errors/appError.js";
 
 export const listarFabricantes = async () => {
-  try {
-    const fabricantes = await fabricanteRepository.findAll();
+  const fabricantes = await fabricanteRepository.findAll();
 
-    const response =  fabricantes.map((fabricante) => ({
-        id:fabricante.id,
-        nome:fabricante.nome,
-        documento:fabricante.documento_registro,
-        pais: fabricante.pais
-    }));
-
-    return response;
-    
-  }catch (error) {
-    throw new Error("Erro ao listar fabricantes: "+error.message);
+  if (!fabricantes || fabricantes.length == 0) {
+    throw new AppError("Não há fabricantes cadastrados", 404);
   }
+
+  return fabricantes.map((fabricante) => ({
+    id: fabricante.id,
+    nome: fabricante.nome,
+    documento: fabricante.documento_registro,
+    pais: fabricante.pais
+  }));
 };
 
+export const buscarFabricante = async (id) => {
+  const fabricante = await fabricanteRepository.findById(id);
 
-export const buscarFabricante = async(id) => {
-    try{
-        const fabricante = await fabricanteRepository.findById(id);
+  if (!fabricante) {
+    throw new AppError("Fabricante não encontrado", 404);
+  }
 
-        const response = {
-            nome: fabricante.nome,
-            documento: fabricante.documento_registro,
-            pais: fabricante.pais
-        }
+  return {
+    nome: fabricante.nome,
+    documento: fabricante.documento_registro,
+    pais: fabricante.pais
+  };
+};
 
-        return response;
-    
-    } catch (error) {
-      throw new Error("Erro ao buscar fabricante: "+error.message);
-    }
-}
+export const cadastrarFabricante = async (fabricante) => {
+  const novoFabricante = await fabricanteRepository.create(fabricante);
 
-export const cadastrarFabricante = async(fabricante) => {
-    try{
-        const novoFabricante = await fabricanteRepository.create(fabricante);
+  return {
+    nome: novoFabricante.nome,
+    documento: novoFabricante.documento_registro,
+    pais: novoFabricante.pais
+  };
+};
 
-        const response = {
-            nome: novoFabricante.nome,
-            documento: novoFabricante.documento_registro,
-            pais: novoFabricante.pais
-        }
+export const atualizarFabricante = async (id, fabricante) => {
+  const fabricanteAtualizado = await fabricanteRepository.update(id, fabricante);
 
-        return response;
-    }catch (error) {
-        throw new Error("Erro ao criar fabricante: " + error.message);
-    }
-}
+  if(!fabricanteAtualizado){
+    throw new Error("Fabricante não encontrado", 404)
+  }
 
-export const atualizarFabricante = async(id,fabricante) => {
-    try{
-        const fabricanteAtualizado = await fabricanteRepository.update(id,fabricante);
+  return {
+    nome: fabricanteAtualizado.nome,
+    documento: fabricanteAtualizado.documento_registro,
+    pais: fabricanteAtualizado.pais
+  };
+};
 
-        const response = {
-            nome: fabricanteAtualizado.nome,
-            documento: fabricanteAtualizado.documento_registro,
-            pais: fabricanteAtualizado.pais
-        }
+export const deletarFabricante = async (id) => {
+  const resultado = await fabricanteRepository.delete(id);
+  
+  if(!resultado){
+    throw new Error("Fabricante não encontrado");
+  }
 
-        return response;
-
-    }catch (error) {
-        throw new Error("Erro ao atualizar fabricante: "+error.message);
-    }
-}
-
-export const deletarFabricante = async(id) => {
-    try{
-        
-        const fabricanteDeletado = await fabricanteRepository.delete(id);
-
-        return fabricanteDeletado;
-
-    }catch (error) {
-        throw new Error("Não foi possível deletar o fabricante: "+error.message);
-    }
-}
+  return resultado;
+};

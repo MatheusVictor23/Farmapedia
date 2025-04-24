@@ -1,55 +1,49 @@
 import Fabricante from "../models/Fabricante.js";
+import AppError from "../errors/appError.js";
+import tratarErrosSequelize from "../errors/tratarErrosSequelize.js";
 
 export default class fabricanteRepository{
 
     static async findAll(){
-        try{
-            return await Fabricante.findAll();
 
-        }catch(error){
-            throw new Error("Erro ao listar fabricantes: "+error.message);
-        }
+        const fabricantes = await Fabricante.findAll();
+
+        if(!fabricantes) return null;
+
+        return fabricantes;
+
     }
 
     static async findById(id){
-        try{
-            return await Fabricante.findByPk(id);
-        }catch(error){
-            throw new Error("Erro ao listar fabricante: "+error.message);
-        }
+
+        const fabricante = await Fabricante.findByPk(id);
+
+        if(!fabricante) return null;
+
+        return fabricante;
     }
 
     static async create(fabricante){
+
         try{
-
-            const documentoDuplicado = await Fabricante.findOne({
-                where:{documento_registro: novoFabricante.documento}
-            });
-
-            if(documentoDuplicado){
-                throw new Error("Já existe um fabricante cadastro com esse documento!")
-            }
-
             const novoFabricante = await Fabricante.create({
                 nome: fabricante.nome,
                 documento_registro:fabricante.documento,
                 pais: fabricante.pais
             });
-
+    
             return await Fabricante.findByPk(novoFabricante.id)
-
         }catch(error){
-            throw new Error("Erro ao criar fabricante: "+error.message);
+            tratarErrosSequelize(error);
         }
     }
 
     static async update(id, fabricante){
+
         try{
             const fabricanteEncontrado = await Fabricante.findByPk(id);
-
-            if(!fabricanteEncontrado){
-                throw new Error("Fabricante não encontrado!");
-            }
+    
+            if(!fabricanteEncontrado) return null;
     
             fabricanteEncontrado.set({
                 nome: fabricante.nome,
@@ -58,28 +52,24 @@ export default class fabricanteRepository{
             });
     
             await fabricanteEncontrado.save();
-
+    
             return await Fabricante.findByPk(fabricanteEncontrado.id);
 
         }catch(error){
-            throw new Error("Erro ao atualizar fabricante: "+error.message);
+            tratarErrosSequelize(error);
         }
+
     }
 
 
     static async delete(id){
-        try{
-            const fabricanteEncontrado = await Fabricante.findByPk(id);
 
-            if(!fabricanteEncontrado){
-                throw new Error("Fabricante não encontrado!");
-            }
-    
-            await fabricanteEncontrado.destroy();
+        const fabricanteEncontrado = await Fabricante.findByPk(id);
 
-            return {message: "Fabricante deletado com sucesso!"}
-        }catch(error){
-            throw new Error("Erro ao deletar fabricante: "+error.message);
-        }
+        if(!fabricanteEncontrado) return null;
+
+        await fabricanteEncontrado.destroy();
+
+        return {message:"Fabricante deletado!"}
     }
 }
