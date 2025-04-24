@@ -7,6 +7,6 @@ export const validarRequisicao = (schema) => {
         return res.status(400).json({ erros: mensagens });
       }
   
-      next(); // Se passou na validação, continua pro controller
+      next();
     };
   };

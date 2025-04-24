@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
-import AppError from "../middlewares/errorHandler.js";
+import AppError from "./appError.js";
 
-export function tratarErroSequelize(err) {
+export default function tratarErroSequelize(err) {
   if (err instanceof Sequelize.UniqueConstraintError) {
     throw new AppError("Já existe um registro com esse valor único.", 409);
   }
@@ -12,7 +12,7 @@ export function tratarErroSequelize(err) {
   }
 
   if (err instanceof Sequelize.ForeignKeyConstraintError) {
-    throw new AppError("Valor inválido em chave estrangeira.", 400);
+    throw new AppError("Há elementos associados a esse modelo.", 400);
   }
 
   throw err; 

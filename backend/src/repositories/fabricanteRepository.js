@@ -1,5 +1,4 @@
 import Fabricante from "../models/Fabricante.js";
-import AppError from "../errors/appError.js";
 import tratarErrosSequelize from "../errors/tratarErrosSequelize.js";
 
 export default class fabricanteRepository{
@@ -64,12 +63,17 @@ export default class fabricanteRepository{
 
     static async delete(id){
 
-        const fabricanteEncontrado = await Fabricante.findByPk(id);
+        try{
+            const fabricanteEncontrado = await Fabricante.findByPk(id);
+    
+            if(!fabricanteEncontrado) return null;
+    
+            await fabricanteEncontrado.destroy();
+    
+            return {message:"Fabricante deletado!"}
+        }catch(error){
+            tratarErrosSequelize(error);
+        }
 
-        if(!fabricanteEncontrado) return null;
-
-        await fabricanteEncontrado.destroy();
-
-        return {message:"Fabricante deletado!"}
     }
 }
